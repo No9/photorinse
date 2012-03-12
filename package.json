@@ -1,0 +1,12 @@
+{
+  "name" : "photorinse",
+  "version" : "0.0.1",
+  "description": "A photo filter app.",
+  "repository": {
+    "title": "Photo Rinse!",
+    "uses": {
+      "types": [ "photos" ],
+      "services": [ "facebook", "twitter", "foursquare", "instagram" ]
+    }
+  }
+}
