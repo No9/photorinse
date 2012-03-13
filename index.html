@@ -49,7 +49,7 @@
       var client = new APIClient();
 	  var lng = 'english';
       // get some photos
-      client.getJSON('/Me/photos', {limit: 10}, function(photos) {
+      $.getJSON('/Me/photos', {limit: 10}, function(photos) {
         console.log('found ' + photos.length + ' photos');
         // add them to the DOM
         for(var i in photos) {
