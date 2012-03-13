@@ -1,0 +1,104 @@
+<html>
+<head>
+  <style>
+  .photo {
+  		
+  	max-width:300px;
+    /* upside down! 
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    max-width:300px;
+    max-height:300px;*/
+  }
+  </style>
+  <link type="text/css" rel="stylesheet" href="css/style.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript"></script>
+  <script src="https://singly.com/js/api.js" type="text/javascript"></script>
+  <script src="js/jquery.isotope.min.js" type="text/javascript"></script>
+  <script src="js/Snowball.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+		var Stem = function(lng) {
+		        var testStemmer = new Snowball(lng);
+		        return function(word) {
+		          testStemmer.setCurrent(word);
+		          testStemmer.stem();
+		          return testStemmer.getCurrent();
+		        }
+		      };
+	var stems = [];     
+    
+    $(function() {
+      var client = new APIClient();
+	  var lng = 'english';
+      // get some photos
+      client.getJSON('/Me/photos', {limit: 10}, function(photos) {
+        console.log('found ' + photos.length + ' photos');
+        // add them to the DOM
+        for(var i in photos) {
+          
+          
+	          console.log('photo #' + i, photos[i]);
+	          
+	          if((i % 2) == 0)
+	          {
+	          	$('#container').append('<div class="photo anna"><img src="' + photos[i].url + '" style="max-width:300px"></div>');
+	          }else{
+	          	$('#container').append('<div class="photo"><img src="' + photos[i].url + '" style="max-width:300px"></div>');
+	          }
+	          
+	          var title = photos[i].title;
+	          console.log(title);
+	          
+	          if(title === undefined)
+	          {
+	          	continue;
+	          }
+	          var titleWords = title.split(' ');
+	          
+	          for(var word in titleWords)
+	          {
+	          	var s = new Stem(lng)(word);
+	          	//console.log("word " + titleWords[word]);
+	    		stems.push(new Stem(lng)(titleWords[word]));      	
+	          }
+	          for(var s = 0; s < stems.length; s++)
+	          {
+	          	console.log(stems[s]);
+	          }
+          }
+        
+	        $('#container').isotope({
+	  // options
+	  		itemSelector : '.photo',
+	  		layoutMode : 'fitRows'
+			});
+			
+			$('#filters a').click(function(){
+  				var selector = $(this).attr('data-filter');
+			    $('#container').isotope({ filter: selector });
+  				return false;
+			});
+      });
+    });
+    
+  </script>
+</head>
+<body>
+	<!--<div id="container">
+  <div class="element transition metal">...</div>
+  <div class="element post-transition metal">...</div>
+  <div class="element alkali metal">...</div>
+  <div class="element transition metal">...</div>
+  <div class="element lanthanoid metal inner-transition">...</div> 
+  <div class="element halogen nonmetal">...</div> 
+  <div class="element alkaline-earth metal">...</div>
+  ...
+</div>-->
+	<ul id="filters">
+  		<li><a href="#" data-filter="*">show all</a></li>
+  		<li><a href="#" data-filter=".anna">anna</a></li>
+  	</ul>
+	<div id="container"></div>
+
+</body>
+</html>
