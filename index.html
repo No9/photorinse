@@ -44,18 +44,28 @@
 		        }
 		      };
 	var stems = [];     
-    
+    var titles = [];
     $(function() {
-      var client = new APIClient();
+      var client;
+      
+      var environ =  window.location.toString().substring(0, 4);
+	  if (environ === 'file') 
+	  {
+	  	 client = new APIClient();
+	  }else
+	  {
+	  	client = $;
+	  }
 	  var lng = 'english';
       // get some photos
-      $.getJSON('/Me/photos', {limit: 10}, function(photos) {
+      
+      client.getJSON('/Me/photos', {limit: 10}, function(photos) {
         console.log('found ' + photos.length + ' photos');
         // add them to the DOM
         for(var i in photos) {
           
           
-	          console.log('photo #' + i, photos[i]);
+	          ////console.log('photo #' + i, photos[i]);
 	          
 	          if((i % 2) == 0)
 	          {
@@ -65,13 +75,16 @@
 	          }
 	          
 	          var title = photos[i].title;
-	          console.log(title);
+	          ////console.log(title);
 	          
 	          if(title === undefined)
 	          {
 	          	continue;
+	          }else
+	          {
+	          	titles.push(title);
 	          }
-	          var titleWords = title.split(' ');
+	          /*var titleWords = title.split(' ');
 	          
 	          for(var word in titleWords)
 	          {
@@ -82,7 +95,7 @@
 	          for(var s = 0; s < stems.length; s++)
 	          {
 	          	console.log(stems[s]);
-	          }
+	          }*/
           }
         
 	        $('#container').isotope({
